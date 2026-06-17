@@ -1,4 +1,6 @@
-# Mentor Project Backend
+# Mentorbridge
+
+This is the V1 of the MentorBridge project.
 
 Django backend scaffold with a starter API app.
 
