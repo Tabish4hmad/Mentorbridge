@@ -1,0 +1,41 @@
+      <section id="sec-mentor-detail" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Mentor Profile</span>
+            <button class="btn-outline" type="button" onclick="showSection('mentors')"><i class="fa-solid fa-arrow-left"></i>Go back</button>
+          </div>
+          <div class="detail-panel">
+            <div class="detail-avatar" id="detailAvatar">M</div>
+            <div>
+              <div class="profile-name" id="detailName">Mentor Name</div>
+              <span class="tag" id="detailExpertiseTag">Mentorship</span>
+              <div class="detail-grid">
+                <div class="detail-item">
+                  <div class="info-label">Name</div>
+                  <div class="info-value" id="detailNameValue">Mentor Name</div>
+                </div>
+                <div class="detail-item">
+                  <div class="info-label">Email</div>
+                  <div class="info-value" id="detailEmail">mentor@example.com</div>
+                </div>
+                <div class="detail-item">
+                  <div class="info-label">Expertise</div>
+                  <div class="info-value" id="detailExpertise">Mentorship</div>
+                </div>
+                <div class="detail-item">
+                  <div class="info-label">Institute / Organization</div>
+                  <div class="info-value" id="detailInstitute">Not set</div>
+                </div>
+                <div class="detail-item">
+                  <div class="info-label">Availability</div>
+                  <div class="info-value" id="detailAvailability">Not set</div>
+                </div>
+              </div>
+              <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-top:1.2rem;">
+                <button class="btn-teal" id="detailRequestBtn" type="button"><i class="fa-solid fa-paper-plane"></i>Request this mentor</button>
+                <button class="btn-outline" type="button" onclick="showSection('mentors')"><i class="fa-solid fa-magnifying-glass"></i>Search someone else</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

@@ -1,0 +1,19 @@
+      <section id="sec-connections" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr"><span class="card-title">Connected Mentors</span></div>
+          <div id="connectionList">
+            {% for accepted_request in accepted_requests %}
+            <div class="person-row" data-connected-row>
+              <div class="person-avatar">{% if accepted_request.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ accepted_request.mentor.profile.avatar_image.url }}" alt="{{ accepted_request.mentor.get_full_name|default:accepted_request.mentor.username }}">{% else %}{{ accepted_request.mentor.profile.avatar|default:"M" }}{% endif %}</div>
+              <div class="person-main">
+                <div class="person-name">{{ accepted_request.mentor.get_full_name|default:accepted_request.mentor.username }}</div>
+                <div class="person-meta">{{ accepted_request.topic }} | {{ accepted_request.mentor.email }}</div>
+              </div>
+              <button class="btn-outline schedule-btn" type="button" data-mentor="{{ accepted_request.mentor.get_full_name|default:accepted_request.mentor.username }}" data-initials="{{ accepted_request.mentor.profile.avatar|default:"M" }}" data-topic="{{ accepted_request.topic }}"><i class="fa-solid fa-calendar-plus"></i>Schedule</button>
+            </div>
+            {% empty %}
+            <div class="empty" id="connectionEmpty"><i class="fa-solid fa-user-group"></i><p>No connected mentors yet.</p></div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>

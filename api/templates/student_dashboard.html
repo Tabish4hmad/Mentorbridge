@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard | MentorBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/api/inbox.css">
+  <style>
+    :root {
+      --ink: #0d1f2d;
+      --teal: #0f9d8a;
+      --teal-light: #e0f5f2;
+      --teal-dark: #0a7a6c;
+      --gold: #e8a838;
+      --gold-light: #fdf3e0;
+      --slate: #3d5166;
+      --mist: #f4f7f9;
+      --white: #ffffff;
+      --border: rgba(13, 31, 45, .10);
+      --shadow: 0 2px 16px rgba(13, 31, 45, .08);
+      --shadow-lg: 0 8px 40px rgba(13, 31, 45, .14);
+      --sidebar-width: 260px;
+      --display: "Playfair Display", Georgia, serif;
+      --body: "DM Sans", Arial, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--mist);
+      color: var(--ink);
+      font-family: var(--body);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #0a1a28;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 50;
+    }
+
+    .sidebar-logo {
+      padding: 1.6rem 1.5rem 1.2rem;
+      font-family: var(--display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      text-decoration: none;
+    }
+
+    .logo-dot,
+    .student-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--teal);
+      display: inline-block;
+    }
+
+    .sidebar-user {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .avatar,
+    .avatar-sm,
+    .person-avatar {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      background: rgba(15, 157, 138, .18);
+      color: #66ddcf;
+      border: 2px solid rgba(15, 157, 138, .30);
+      font-size: .82rem;
+    }
+
+    .sidebar-user-name {
+      color: #fff;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+    }
+
+    .sidebar-user-role {
+      color: rgba(102, 221, 207, .75);
+      font-size: .72rem;
+      margin-top: 1px;
+    }
+
+    .sidebar-nav {
+      padding: 1rem 0;
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .25);
+      padding: .8rem 1.5rem .4rem;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: .65rem 1.5rem;
+      color: rgba(255, 255, 255, .55);
+      font-size: .88rem;
+      cursor: pointer;
+      transition: all .18s;
+      border: 0;
+      border-left: 3px solid transparent;
+      background: transparent;
+      text-decoration: none;
+      font-family: var(--body);
+      text-align: left;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: #fff;
+      background: rgba(15, 157, 138, .12);
+      border-left-color: var(--teal);
+    }
+
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--teal);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-bottom {
+      padding: 1rem 1.5rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, .45);
+      font-size: .85rem;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      font-family: var(--body);
+      padding: 0;
+    }
+
+    .logout-btn:hover {
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .main {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .page-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .student-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--teal-light);
+      border: 1px solid rgba(15, 157, 138, .22);
+      color: var(--teal-dark);
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 700;
+      max-width: 280px;
+    }
+
+    .notif-btn,
+    .profile-trigger {
+      border: 1px solid var(--border);
+      background: var(--mist);
+      cursor: pointer;
+      color: var(--slate);
+      font-family: var(--body);
+    }
+
+    .notif-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .avatar-sm {
+      width: 36px;
+      height: 36px;
+      background: rgba(15, 157, 138, .15);
+      color: var(--teal);
+      border: 2px solid var(--teal-light);
+      font-size: .78rem;
+    }
+
+    .profile-menu-wrap {
+      position: relative;
+    }
+
+    .profile-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 3px 9px 3px 3px;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      width: 260px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: .55rem;
+      display: none;
+      z-index: 100;
+    }
+
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: .75rem;
+      border-radius: var(--radius-sm);
+      background: var(--mist);
+      margin-bottom: .45rem;
+    }
+
+    .profile-mini-name {
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .profile-mini-email {
+      font-size: .72rem;
+      color: var(--slate);
+      margin-top: 2px;
+      max-width: 170px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dropdown-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 0;
+      color: var(--slate);
+      font-family: var(--body);
+      font-size: .86rem;
+      font-weight: 600;
+      text-align: left;
+      padding: .72rem .75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+    }
+
+    .dropdown-item:hover {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: .45rem 0;
+    }
+
+    .dropdown-item.danger {
+      color: #c0274a;
+    }
+
+    .content {
+      padding: 2rem 2.5rem;
+      flex: 1;
+    }
+
+    .page-section {
+      animation: fadeIn .24s ease;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome {
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome h1,
+    .profile-name {
+      font-family: var(--display);
+      letter-spacing: 0;
+    }
+
+    .welcome h1 {
+      font-size: clamp(1.5rem, 3vw, 1.9rem);
+      margin: 0 0 4px;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: var(--slate);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+
+    .accent {
+      color: var(--teal);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card,
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+      padding: 1.2rem 1.4rem;
+    }
+
+    .stat-icon,
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin-bottom: .9rem;
+    }
+
+    .ic-teal {
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    .ic-gold {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    .ic-blue {
+      background: #ebf4ff;
+      color: #3b82f6;
+    }
+
+    .ic-green {
+      background: #edf7f0;
+      color: #1a6b3a;
+    }
+
+    .stat-value {
+      font-family: var(--display);
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: .78rem;
+      color: var(--slate);
+      margin-top: 2px;
+    }
+
+    .stat-trend {
+      font-size: .72rem;
+      color: var(--teal);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      padding: 1.4rem;
+    }
+
+    .card-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-size: .95rem;
+      font-weight: 700;
+    }
+
+    .card-act {
+      border: 0;
+      background: transparent;
+      color: var(--teal);
+      cursor: pointer;
+      font-weight: 700;
+      font-family: var(--body);
+      font-size: .78rem;
+      text-decoration: none;
+    }
+
+    .person-row,
+    .task-item,
+    .note-item,
+    .notif-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.05rem;
+      margin-bottom: .85rem;
+      background: #fff;
+    }
+
+    .person-row,
+    .task-item,
+    .note-top,
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .person-row {
+      align-items: center;
+    }
+
+    .mentor-card {
+      cursor: pointer;
+    }
+
+    .mentor-card:hover {
+      border-color: rgba(15, 157, 138, .35);
+      box-shadow: 0 8px 28px rgba(13, 31, 45, .08);
+    }
+
+    .person-avatar {
+      width: 40px;
+      height: 40px;
+      background: rgba(15, 157, 138, .15);
+      color: var(--teal);
+      font-size: .82rem;
+    }
+
+    .person-main {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .person-name,
+    .task-title,
+    .note-title {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .person-meta,
+    .task-copy,
+    .note-meta,
+    .muted {
+      font-size: .76rem;
+      color: var(--slate);
+      line-height: 1.45;
+    }
+
+    .task-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      background: var(--gold-light);
+      color: var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .btn-teal,
+    .btn-outline {
+      border-radius: var(--radius-sm);
+      font-family: var(--body);
+      font-size: .84rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: .55rem 1rem;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .btn-teal {
+      background: var(--teal);
+      border: 1px solid var(--teal);
+      color: #fff;
+    }
+
+    .btn-teal:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--slate);
+    }
+
+    .status-pill,
+    .tag {
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .status-pill {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      padding: 4px 10px;
+      margin-left: auto;
+    }
+
+    .status-pill.pending {
+      background: var(--gold-light);
+      color: #7a5200;
+    }
+
+    .tag {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      border: 1px solid rgba(15, 157, 138, .20);
+      padding: 4px 12px;
+    }
+
+    .note-item p {
+      color: var(--slate);
+      line-height: 1.55;
+      margin: .55rem 0 0;
+      white-space: pre-wrap;
+      font-size: .88rem;
+    }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: .75rem;
+      color: var(--teal-dark);
+      font-weight: 700;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      font-size: .84rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 6px;
+    }
+
+    .form-input {
+      width: 100%;
+      background: var(--mist);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .65rem .9rem;
+      font-family: var(--body);
+      font-size: .88rem;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .form-input:focus {
+      border-color: var(--teal);
+      background: #fff;
+    }
+
+    .search-stack {
+      display: grid;
+      gap: .85rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-actions {
+      display: flex;
+      gap: .75rem;
+      flex-wrap: wrap;
+    }
+
+    .search-row {
+      position: relative;
+    }
+
+    .search-row i {
+      position: absolute;
+      left: .9rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--slate);
+      font-size: .84rem;
+      pointer-events: none;
+    }
+
+    .search-row .form-input {
+      padding-left: 2.35rem;
+    }
+
+    .mentor-search-layout {
+      display: grid;
+      grid-template-columns: minmax(280px, 360px) minmax(0, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .mentor-filter-card,
+    .mentor-results-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow);
+    }
+
+    .mentor-filter-card {
+      overflow: hidden;
+      position: sticky;
+      top: 84px;
+    }
+
+    .mentor-filter-head {
+      display: grid;
+      gap: .45rem;
+      padding: 1.4rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mentor-filter-section {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .mentor-filter-toggle {
+      width: 100%;
+      border: 0;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1rem 1.4rem;
+      font-family: var(--body);
+      font-size: .94rem;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .mentor-filter-toggle i {
+      color: var(--teal);
+      font-size: .82rem;
+    }
+
+    .mentor-filter-body {
+      display: none;
+      padding: 0 1.4rem 1.1rem;
+      background: #fff;
+    }
+
+    .mentor-filter-section.open .mentor-filter-body {
+      display: block;
+    }
+
+    .mentor-filter-options {
+      display: grid;
+      gap: .82rem;
+      margin-top: 1rem;
+    }
+
+    .filter-check {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      color: var(--ink);
+      font-size: .92rem;
+    }
+
+    .filter-check input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--teal);
+    }
+
+    .filter-check span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .filter-check em {
+      color: var(--slate);
+      font-style: normal;
+      font-size: .86rem;
+    }
+
+    .filter-more-btn {
+      width: fit-content;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: var(--radius-sm);
+      color: var(--ink);
+      cursor: pointer;
+      font-family: var(--body);
+      font-size: .86rem;
+      font-weight: 800;
+      padding: .45rem .65rem;
+    }
+
+    .filter-more-btn:hover {
+      border-color: rgba(15, 157, 138, .35);
+      color: var(--teal-dark);
+      background: var(--teal-light);
+    }
+
+    .mentor-filter-actions {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: .75rem;
+      padding: 1.2rem 1.4rem;
+      background: var(--mist);
+    }
+
+    .mentor-results-card {
+      padding: 1.4rem;
+      min-width: 0;
+    }
+
+    .profile-cover {
+      height: 140px;
+      background: linear-gradient(135deg, #0a1a28 0%, #0f5b62 46%, #0f9d8a 100%);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      position: relative;
+      overflow: hidden;
+      margin: -1.4rem -1.4rem 0;
+    }
+
+    .profile-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: -36px;
+      padding-bottom: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-head > div:last-child {
+      min-width: 0;
+      padding-top: 36px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--teal-light);
+      border: 4px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--teal);
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .profile-avatar-wrap {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar-wrap .profile-avatar {
+      width: 100%;
+      height: 100%;
+    }
+
+    .avatar-upload-btn {
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 3px solid #fff;
+      background: #fff;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .95rem;
+    }
+
+    .avatar-upload-btn:hover {
+      color: var(--teal-dark);
+      background: var(--teal-light);
+    }
+
+    .profile-name {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .detail-panel {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.2rem;
+      align-items: start;
+    }
+
+    .detail-avatar {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--teal-light);
+      color: var(--teal);
+      font-family: var(--display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      border: 4px solid #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .detail-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      background: var(--mist);
+    }
+
+    .info-list {
+      display: grid;
+      gap: .85rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .85rem;
+    }
+
+    .info-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0;
+      background: var(--mist);
+      color: var(--slate);
+      font-size: .78rem;
+      flex-shrink: 0;
+    }
+
+    .info-label {
+      font-size: .72rem;
+      color: var(--slate);
+    }
+
+    .info-value {
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .empty {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--slate);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+    }
+
+    .empty i {
+      font-size: 2rem;
+      margin-bottom: .8rem;
+      color: rgba(13, 31, 45, .18);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 999;
+      background: var(--ink);
+      border: 1px solid rgba(15, 157, 138, .30);
+      border-radius: var(--radius-md);
+      padding: .9rem 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all .3s;
+      min-width: 260px;
+      max-width: min(380px, calc(100vw - 32px));
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast i {
+      color: var(--teal);
+    }
+
+    @media (max-width: 1100px) {
+      .stats-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .mentor-search-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .mentor-filter-card {
+        position: static;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 0 1rem;
+      }
+
+      .content {
+        padding: 1.25rem;
+      }
+
+      .topbar-right {
+        gap: .5rem;
+      }
+
+      .student-pill {
+        display: none;
+      }
+
+      .form-grid,
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+
+      .mentor-filter-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .person-row {
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .detail-panel,
+      .detail-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .status-pill {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="/" class="sidebar-logo"><span class="logo-dot"></span>MentorBridge</a>
+    <div class="sidebar-user">
+      <div class="avatar" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"S" }}{% endif %}</div>
+      <div>
+        <div class="sidebar-user-name">{{ full_name|default:request.user.username }}</div>
+        <div class="sidebar-user-role">Student</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Student dashboard navigation">
+      <div class="nav-label">Main</div>
+      <button class="nav-item active" type="button" data-section="dashboard"><i class="fa-solid fa-house"></i>Dashboard</button>
+      <button class="nav-item" type="button" data-section="profile"><i class="fa-solid fa-user"></i>My Profile</button>
+      <div class="nav-label">Mentorship</div>
+      <button class="nav-item" type="button" data-section="mentors"><i class="fa-solid fa-magnifying-glass"></i>Find Mentors</button>
+      <button class="nav-item" type="button" data-section="requests"><i class="fa-solid fa-paper-plane"></i>Requests <span class="nav-badge" id="requestBadge">{{ pending_count }}</span></button>
+      <button class="nav-item" type="button" data-section="connections"><i class="fa-solid fa-user-group"></i>Connections</button>
+      <button class="nav-item" type="button" data-section="inbox"><i class="fa-solid fa-message"></i>Inbox</button>
+      <button class="nav-item" type="button" data-section="notes"><i class="fa-solid fa-book-open"></i>Notes</button>
+      <div class="nav-label">Manage</div>
+      <button class="nav-item" type="button" data-section="sessions"><i class="fa-solid fa-calendar-days"></i>Sessions</button>
+      <button class="nav-item" type="button" data-section="notifications"><i class="fa-solid fa-bell"></i>Notifications</button>
+      <button class="nav-item" type="button" data-section="settings"><i class="fa-solid fa-gear"></i>Settings</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="logout-btn" type="button" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <span class="page-title" id="pageTitle">Dashboard</span>
+      <div class="topbar-right">
+        <div class="student-pill"><span class="student-pill-dot"></span><span>Student Workspace</span></div>
+        <button class="notif-btn" type="button" onclick="showSection('notifications')" aria-label="Open notifications"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile-menu-wrap">
+          <button class="profile-trigger" id="profileTrigger" type="button" onclick="toggleProfileMenu(event)" aria-label="Open profile menu" aria-expanded="false">
+            <span class="avatar-sm" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"S" }}{% endif %}</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="profile-dropdown" id="profileDropdown" onclick="event.stopPropagation()">
+            <div class="profile-mini">
+              <div class="avatar" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"S" }}{% endif %}</div>
+              <div>
+                <div class="profile-mini-name">{{ full_name|default:request.user.username }}</div>
+                <div class="profile-mini-email">{{ request.user.email }}</div>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" onclick="goMenu('profile')"><i class="fa-solid fa-user"></i>View Profile</button>
+            <button class="dropdown-item" type="button" onclick="goMenu('settings')"><i class="fa-solid fa-gear"></i>Settings</button>
+            <button class="dropdown-item" type="button" onclick="goMenu('notifications')"><i class="fa-solid fa-bell"></i>Notifications</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item danger" type="button" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      {% include "dashboards/student/sections/dashboard.html" %}
+
+      {% include "dashboards/student/sections/profile.html" %}
+
+      {% include "dashboards/student/sections/mentors.html" %}
+
+      {% include "dashboards/student/sections/mentor-detail.html" %}
+
+      {% include "dashboards/student/sections/requests.html" %}
+
+      {% include "dashboards/student/sections/connections.html" %}
+
+      {% include "dashboards/student/sections/notes.html" %}
+
+      {% include "dashboards/student/sections/sessions.html" %}
+
+      {% include "includes/inbox.html" %}
+
+      {% include "dashboards/student/sections/notifications.html" %}
+
+      {% include "dashboards/student/sections/settings.html" %}
+    </div>
+  </main>
+
+  <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+  <script>
+    const sections = ['dashboard', 'profile', 'mentors', 'mentor-detail', 'requests', 'connections', 'inbox', 'notes', 'sessions', 'notifications', 'settings'];
+    const titles = {
+      dashboard: 'Dashboard',
+      profile: 'My Profile',
+      mentors: 'Find Mentors',
+      'mentor-detail': 'Mentor Profile',
+      requests: 'Your Requests',
+      connections: 'Connections',
+      inbox: 'Inbox',
+      notes: 'Notes',
+      sessions: 'Sessions',
+      notifications: 'Notifications',
+      settings: 'Settings'
+    };
+
+    const requestList = document.getElementById('requestList');
+    const connectionList = document.getElementById('connectionList');
+    const sessionList = document.getElementById('sessionList');
+    const mentorList = document.getElementById('mentorList');
+    const referenceMentors = [...document.querySelectorAll('.mentor-card')].map(card => ({
+      id: card.dataset.mentorId,
+      name: card.dataset.mentor,
+      avatar: card.dataset.initials,
+      avatarUrl: card.dataset.avatarUrl || '',
+      expertise: card.dataset.topic,
+      email: card.querySelector('.person-meta').textContent.split('|').pop().trim(),
+      institute: card.dataset.institute,
+      availability: card.dataset.availability
+    }));
+    const mentorNameSearch = document.getElementById('mentorNameSearch');
+    const mentorExpertiseSearch = document.getElementById('mentorExpertiseSearch');
+    const mentorSearchBtn = document.getElementById('mentorSearchBtn');
+    const mentorResetBtn = document.getElementById('mentorResetBtn');
+    const mentorFilterTokens = [...document.querySelectorAll('[data-filter-token]')];
+    let selectedMentorCard = null;
+
+    function getInitialSection() {
+      const hashSection = window.location.hash.replace(/^#\/?/, '');
+      return sections.includes(hashSection) ? hashSection : 'dashboard';
+    }
+
+    function showSection(name, options = {}) {
+      if (!sections.includes(name)) name = 'dashboard';
+      sections.forEach(section => {
+        document.getElementById(`sec-${section}`).classList.toggle('hidden', section !== name);
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.section === name);
+      });
+      document.getElementById('pageTitle').textContent = titles[name] || name;
+      if (!options.skipHash) {
+        const nextHash = name === 'dashboard' ? '#/dashboard' : `#/${name}`;
+        if (window.location.hash !== nextHash) {
+          history.pushState(null, '', nextHash);
+        }
+      }
+      closeProfileMenu();
+    }
+
+    document.querySelectorAll('[data-section]').forEach(button => {
+      button.addEventListener('click', () => showSection(button.dataset.section));
+    });
+
+    window.addEventListener('hashchange', () => {
+      showSection(getInitialSection(), {skipHash: true});
+    });
+
+    function toggleProfileMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('profileDropdown');
+      const trigger = document.getElementById('profileTrigger');
+      const isOpen = menu.classList.toggle('show');
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function closeProfileMenu() {
+      const menu = document.getElementById('profileDropdown');
+      const trigger = document.getElementById('profileTrigger');
+      if (!menu || !trigger) return;
+      menu.classList.remove('show');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function goMenu(section) {
+      showSection(section);
+    }
+
+    document.addEventListener('click', closeProfileMenu);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeProfileMenu();
+    });
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function escapeHTML(value) {
+      const div = document.createElement('div');
+      div.textContent = value || '';
+      return div.innerHTML;
+    }
+
+    function avatarHTML(initials, url, alt = '') {
+      return url
+        ? `<img class="avatar-img" src="${escapeHTML(url)}" alt="${escapeHTML(alt)}">`
+        : escapeHTML(initials || 'U');
+    }
+
+    let toastTimer;
+    function toast(message) {
+      document.getElementById('toastMsg').textContent = message;
+      const el = document.getElementById('toast');
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    }
+
+    function syncCounts() {
+      const pending = requestList.querySelectorAll('[data-request-row][data-status="pending"]').length;
+      const connections = connectionList.querySelectorAll('[data-connected-row]').length;
+      const sessions = sessionList.querySelectorAll('[data-session-row]').length;
+      document.getElementById('statRequests').textContent = pending;
+      document.getElementById('statConnections').textContent = connections;
+      document.getElementById('requestBadge').textContent = pending;
+      document.getElementById('requestBadge').style.display = pending ? 'inline-flex' : 'none';
+      document.getElementById('requestCountLabel').textContent = `${pending} pending`;
+      document.getElementById('statReqSub').textContent = pending ? 'Waiting for mentor review' : 'Ready to request';
+      document.getElementById('requestEmptyDynamic').classList.toggle('hidden', requestList.querySelectorAll('[data-request-row]').length !== 0);
+      const connectionEmpty = document.getElementById('connectionEmpty');
+      if (connectionEmpty) connectionEmpty.classList.toggle('hidden', connections !== 0);
+      const sessionEmpty = document.getElementById('sessionEmpty');
+      if (sessionEmpty) sessionEmpty.classList.toggle('hidden', sessions !== 0);
+    }
+
+    function addRequestRow(data) {
+      const row = document.createElement('div');
+      row.className = 'person-row request-row';
+      row.dataset.requestRow = 'true';
+      row.dataset.status = data.status;
+      row.dataset.mentor = data.mentor.name;
+      row.innerHTML = `
+        <div class="person-avatar">${avatarHTML(data.mentor.avatar, data.mentor.avatarUrl, data.mentor.name)}</div>
+        <div class="person-main">
+          <div class="person-name">${escapeHTML(data.mentor.name)}</div>
+          <div class="person-meta">${escapeHTML(data.topic)} | ${escapeHTML(data.mentor.email)}</div>
+        </div>
+        <span class="status-pill pending">${escapeHTML(data.status.charAt(0).toUpperCase() + data.status.slice(1))}</span>
+      `;
+      requestList.prepend(row);
+    }
+
+    function requestMentor(card) {
+      const mentor = card.dataset.mentor;
+      const duplicate = [...requestList.querySelectorAll('[data-request-row]')].some(row => row.dataset.mentor === mentor);
+      if (duplicate) {
+        toast(`${mentor} is already in Requests.`);
+        showSection('requests');
+        return;
+      }
+
+      fetch('/api/requests/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+          mentorId: card.dataset.mentorId,
+          topic: card.dataset.topic,
+          message: `Hi ${mentor}, I would like mentorship for ${card.dataset.topic}.`
+        })
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not send request.');
+            return;
+          }
+          addRequestRow(result.request);
+          syncCounts();
+          toast(`Request sent to ${mentor}.`);
+          showSection('requests');
+        })
+        .catch(() => toast('Could not send request. Try again.'));
+    }
+
+    function mentorCardHTML(mentor) {
+      return `
+        <div class="person-row mentor-card" data-mentor-id="${escapeHTML(String(mentor.id))}" data-mentor="${escapeHTML(mentor.name)}" data-initials="${escapeHTML(mentor.avatar)}" data-avatar-url="${escapeHTML(mentor.avatarUrl || '')}" data-topic="${escapeHTML(mentor.expertise)}" data-email="${escapeHTML(mentor.email)}" data-institute="${escapeHTML(mentor.institute)}" data-availability="${escapeHTML(mentor.availability)}">
+          <div class="person-avatar">${avatarHTML(mentor.avatar, mentor.avatarUrl, mentor.name)}</div>
+          <div class="person-main">
+            <div class="person-name">${escapeHTML(mentor.name)}</div>
+            <div class="person-meta">${escapeHTML(mentor.expertise)} | ${escapeHTML(mentor.email)}</div>
+          </div>
+          <button class="btn-teal request-btn" type="button"><i class="fa-solid fa-paper-plane"></i>Request</button>
+        </div>
+      `;
+    }
+
+    function openMentorDetail(card) {
+      selectedMentorCard = card;
+      renderMentorDetail({
+        name: card.dataset.mentor || 'Mentor',
+        email: card.dataset.email || 'Not set',
+        avatar: card.dataset.initials || 'M',
+        avatarUrl: card.dataset.avatarUrl || '',
+        expertise: card.dataset.topic || 'Mentorship',
+        institute: card.dataset.institute || 'Not set',
+        availability: card.dataset.availability || 'Not set'
+      });
+      showSection('mentor-detail');
+
+      fetch(`/api/mentors/${card.dataset.mentorId}/`)
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) return;
+          const mentor = result.mentor;
+          card.dataset.mentor = mentor.name;
+          card.dataset.email = mentor.email;
+          card.dataset.initials = mentor.avatar;
+          card.dataset.avatarUrl = mentor.avatarUrl || '';
+          card.dataset.topic = mentor.expertise;
+          card.dataset.institute = mentor.institute;
+          card.dataset.availability = mentor.availability;
+          renderMentorDetail(mentor);
+        })
+        .catch(() => toast('Could not refresh mentor details.'));
+    }
+
+    function renderMentorDetail(mentor) {
+      document.getElementById('detailAvatar').innerHTML = avatarHTML(mentor.avatar || 'M', mentor.avatarUrl || '', mentor.name || 'Mentor');
+      document.getElementById('detailName').textContent = mentor.name || 'Mentor';
+      document.getElementById('detailNameValue').textContent = mentor.name || 'Mentor';
+      document.getElementById('detailEmail').textContent = mentor.email || 'Not set';
+      document.getElementById('detailExpertise').textContent = mentor.expertise || 'Mentorship';
+      document.getElementById('detailExpertiseTag').textContent = mentor.expertise || 'Mentorship';
+      document.getElementById('detailInstitute').textContent = mentor.institute || 'Not set';
+      document.getElementById('detailAvailability').textContent = mentor.availability || 'Not set';
+    }
+
+    function renderMentors(mentors, label) {
+      mentorList.innerHTML = mentors.map(mentorCardHTML).join('');
+      document.getElementById('mentorListLabel').textContent = label;
+      document.getElementById('mentorSearchEmpty').classList.toggle('hidden', mentors.length !== 0);
+    }
+
+    function resetMentors() {
+      renderMentors(referenceMentors, `${referenceMentors.length} reference mentors`);
+    }
+
+    function searchMentors() {
+      const nameQuery = mentorNameSearch.value.trim();
+      const checkedTokens = mentorFilterTokens
+        .filter(input => input.checked)
+        .map(input => input.value.trim())
+        .filter(Boolean);
+      const expertiseQuery = [mentorExpertiseSearch.value.trim(), ...checkedTokens].filter(Boolean).join(', ');
+      if (!nameQuery && !expertiseQuery) {
+        resetMentors();
+        toast('Add a name or expertise token to search.');
+        return;
+      }
+
+      const params = new URLSearchParams({name: nameQuery, expertise: expertiseQuery});
+      fetch(`/api/mentors/search/?${params.toString()}`)
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not search mentors.');
+            return;
+          }
+          renderMentors(result.mentors, `${result.mentors.length} matches`);
+        })
+        .catch(() => toast('Could not search mentors. Try again.'));
+    }
+
+    mentorSearchBtn.addEventListener('click', searchMentors);
+    mentorResetBtn.addEventListener('click', () => {
+      mentorNameSearch.value = '';
+      mentorExpertiseSearch.value = '';
+      mentorFilterTokens.forEach(input => {
+        input.checked = false;
+      });
+      resetMentors();
+    });
+    [mentorNameSearch, mentorExpertiseSearch].forEach(input => {
+      input.addEventListener('keydown', event => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          searchMentors();
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-filter-toggle]').forEach(button => {
+      button.addEventListener('click', () => {
+        const section = button.closest('.mentor-filter-section');
+        const isOpen = section.classList.toggle('open');
+        button.querySelector('i').className = `fa-solid ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'}`;
+      });
+    });
+
+    document.querySelectorAll('[data-show-more]').forEach(button => {
+      button.addEventListener('click', () => {
+        const extra = button.parentElement.querySelector('.mentor-extra-options');
+        if (!extra) return;
+        const isHidden = extra.classList.toggle('hidden');
+        button.textContent = isHidden ? 'Show more' : 'Show less';
+      });
+    });
+
+    mentorFilterTokens.forEach(input => {
+      input.addEventListener('change', searchMentors);
+    });
+
+    mentorList.addEventListener('click', event => {
+      const button = event.target.closest('.request-btn');
+      if (button) {
+        requestMentor(button.closest('.mentor-card'));
+        return;
+      }
+      const card = event.target.closest('.mentor-card');
+      if (card) openMentorDetail(card);
+    });
+
+    document.getElementById('detailRequestBtn').addEventListener('click', () => {
+      if (selectedMentorCard) requestMentor(selectedMentorCard);
+    });
+
+    document.getElementById('profileInfoForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const mobile = document.getElementById('profileMobileInput').value.trim();
+      const institute = document.getElementById('profileInstituteInput').value.trim();
+      const address = document.getElementById('profileAddressInput').value.trim();
+
+      fetch('/api/profile/basic-info/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({mobile, institute, address})
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not save profile info.');
+            return;
+          }
+          document.getElementById('profileMobileText').textContent = result.user.mobile || 'Not set';
+          document.getElementById('profileInstituteText').textContent = result.user.institute || 'Not set';
+          document.getElementById('profileAddressText').textContent = result.user.address || 'Not set';
+          document.getElementById('profileMobileInput').value = '';
+          document.getElementById('profileInstituteInput').value = '';
+          document.getElementById('profileAddressInput').value = '';
+          document.getElementById('profileMobileInput').placeholder = result.user.mobile || '+91 98765 43210';
+          document.getElementById('profileInstituteInput').placeholder = result.user.institute || 'College, university, or company';
+          document.getElementById('profileAddressInput').placeholder = result.user.address || 'City, State';
+          toast('Profile info saved.');
+        })
+        .catch(() => toast('Could not save profile info. Try again.'));
+    });
+
+    document.getElementById('profileAvatarInput').addEventListener('change', () => {
+      const fileInput = document.getElementById('profileAvatarInput');
+      const file = fileInput.files[0];
+      if (!file) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+      fetch('/api/profile/avatar/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        body: formData
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not upload profile image.');
+            return;
+          }
+          document.querySelectorAll('[data-current-avatar]').forEach(el => {
+            el.innerHTML = avatarHTML(result.user.avatar || 'S', result.user.avatarUrl, `${result.user.firstName} ${result.user.lastName}`.trim());
+          });
+          fileInput.value = '';
+          toast('Profile image updated.');
+        })
+        .catch(() => toast('Could not upload profile image. Try again.'));
+    });
+
+    connectionList.addEventListener('click', event => {
+      const button = event.target.closest('.schedule-btn');
+      if (!button) return;
+      const session = document.createElement('div');
+      session.className = 'person-row';
+      session.dataset.sessionRow = 'true';
+      session.innerHTML = `
+        <div class="person-avatar">${escapeHTML(button.dataset.initials)}</div>
+        <div class="person-main">
+          <div class="person-name">${escapeHTML(button.dataset.topic)} session</div>
+          <div class="person-meta">${escapeHTML(button.dataset.mentor)} | Friday | 6:00 PM</div>
+        </div>
+        <span class="status-pill">Booked</span>
+      `;
+      sessionList.prepend(session);
+      syncCounts();
+      toast(`Session reminder added for ${button.dataset.mentor}.`);
+      showSection('sessions');
+    });
+
+    function doLogout() {
+      fetch('/api/auth/logout/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')}
+      })
+        .then(() => {
+          window.location.href = '/';
+        })
+        .catch(() => {
+          window.location.href = '/';
+        });
+    }
+
+    syncCounts();
+    resetMentors();
+    showSection(getInitialSection(), {skipHash: true});
+  </script>
+  <script src="/static/api/inbox.js"></script>
+</body>
+</html>

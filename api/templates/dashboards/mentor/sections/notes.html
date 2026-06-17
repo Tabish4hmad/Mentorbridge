@@ -1,0 +1,52 @@
+      <section id="sec-notes" class="page-section hidden">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Shared Notes</span>
+              <span class="tag">{{ profile.expertise|default:"Notes" }}</span>
+            </div>
+            <div id="noteList">
+              {% for note in notes %}
+              <article class="note-item" data-note-card>
+                <div class="note-top">
+                  <div class="req-av"><i class="fa-solid fa-book-open"></i></div>
+                  <div>
+                    <div class="note-title">{{ note.title }}</div>
+                    <div class="note-meta">{{ note.tech }} | {{ note.created_at|date:"M d, Y" }}</div>
+                  </div>
+                </div>
+                {% if note.content %}<p>{{ note.content }}</p>{% endif %}
+                {% if note.document %}
+                <a class="doc-link" href="/api/notes/{{ note.id }}/download/" target="_blank" rel="noopener"><i class="fa-solid fa-file-arrow-down"></i>{{ note.document.name|cut:"mentor_notes/" }}</a>
+                {% endif %}
+              </article>
+              {% empty %}
+              <div class="empty" id="noteEmpty"><i class="fa-solid fa-book-open"></i><p>No notes yet. Add one for your students.</p></div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Add Note</span></div>
+            <form id="noteForm" enctype="multipart/form-data">
+              <div class="form-group">
+                <label class="form-label" for="noteTech">Tech / Topic</label>
+                <input class="form-input" id="noteTech" type="text" value="{{ profile.expertise }}" placeholder="Django, React, Python" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="noteTitle">Title</label>
+                <input class="form-input" id="noteTitle" type="text" placeholder="Roadmap, checklist, or key concept" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="noteContent">Notes</label>
+                <textarea class="form-textarea" id="noteContent" placeholder="Add a short description, links, examples, or steps."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="noteDocument">Document</label>
+                <input class="form-input" id="noteDocument" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.txt">
+              </div>
+              <button class="btn-teal" type="submit" style="width:100%;"><i class="fa-solid fa-upload"></i>Upload note</button>
+            </form>
+          </div>
+        </div>
+      </section>

@@ -1,0 +1,33 @@
+      <section id="sec-requests" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Mentorship Requests</span>
+            <span class="muted" id="requestCountLabel">{{ pending_count }} pending</span>
+          </div>
+          <div id="requestList">
+            {% for mentorship_request in pending_requests %}
+            <div class="req-item" data-request-id="{{ mentorship_request.id }}" data-student="{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }}" data-initials="{{ mentorship_request.student.profile.avatar|default:"S" }}" data-avatar-url="{% if mentorship_request.student.profile.avatar_image %}{{ mentorship_request.student.profile.avatar_image.url }}{% endif %}" data-topic="{{ mentorship_request.topic }}" data-email="{{ mentorship_request.student.email }}">
+              <div class="req-hdr">
+                <div class="req-av">{% if mentorship_request.student.profile.avatar_image %}<img class="avatar-img" src="{{ mentorship_request.student.profile.avatar_image.url }}" alt="{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }}">{% else %}{{ mentorship_request.student.profile.avatar|default:"S" }}{% endif %}</div>
+                <div>
+                  <div class="req-name">{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }}</div>
+                  <div class="req-meta">{{ mentorship_request.topic }} | {{ mentorship_request.student.email }} | {{ mentorship_request.created_at|date:"M d, Y" }}</div>
+                </div>
+              </div>
+              {% if mentorship_request.message %}
+              <div class="req-msg">{{ mentorship_request.message }}</div>
+              {% else %}
+              <div class="req-msg">No message included with this request.</div>
+              {% endif %}
+              <div class="req-actions">
+                <button class="btn-teal accept" type="button"><i class="fa-solid fa-check"></i>Accept</button>
+                <button class="btn-danger decline" type="button"><i class="fa-solid fa-xmark"></i>Decline</button>
+              </div>
+            </div>
+            {% empty %}
+            <div class="empty" id="requestEmpty"><i class="fa-solid fa-inbox"></i><p>No pending requests. All caught up.</p></div>
+            {% endfor %}
+          </div>
+          <div class="empty hidden" id="requestEmptyDynamic"><i class="fa-solid fa-inbox"></i><p>No pending requests. All caught up.</p></div>
+        </div>
+      </section>

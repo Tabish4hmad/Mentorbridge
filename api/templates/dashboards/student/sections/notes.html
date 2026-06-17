@@ -1,0 +1,27 @@
+      <section id="sec-notes" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Notes For Your Tech</span>
+            <span class="tag">{{ notes_count }} matches</span>
+          </div>
+          <div id="noteList">
+            {% for note in matching_notes %}
+            <article class="note-item">
+              <div class="note-top">
+                <div class="person-avatar">{% if note.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ note.mentor.profile.avatar_image.url }}" alt="{{ note.mentor.get_full_name|default:note.mentor.username }}">{% else %}<i class="fa-solid fa-book-open"></i>{% endif %}</div>
+                <div>
+                  <div class="note-title">{{ note.title }}</div>
+                  <div class="note-meta">{{ note.tech }} | {{ note.mentor.get_full_name|default:note.mentor.username }} | {{ note.created_at|date:"M d, Y" }}</div>
+                </div>
+              </div>
+              {% if note.content %}<p>{{ note.content }}</p>{% endif %}
+              {% if note.document %}
+              <a class="doc-link" href="/api/notes/{{ note.id }}/download/" target="_blank" rel="noopener"><i class="fa-solid fa-file-arrow-down"></i>{{ note.document.name|cut:"mentor_notes/" }}</a>
+              {% endif %}
+            </article>
+            {% empty %}
+            <div class="empty"><i class="fa-solid fa-book-open"></i><p>No notes match your requested tech yet. Accepted mentor notes will appear here.</p></div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>

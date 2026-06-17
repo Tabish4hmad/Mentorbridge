@@ -1,0 +1,112 @@
+      <section id="sec-dashboard" class="page-section">
+        <div class="welcome">
+          <h1>Good day, <span class="accent">{{ request.user.first_name|default:request.user.username }}</span></h1>
+          <p id="dashSubtitle">{{ pending_count }} pending mentorship request{{ pending_count|pluralize }} waiting for your review.</p>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon ic-teal"><i class="fa-solid fa-users"></i></div>
+            <div class="stat-value" id="statStudents">{{ accepted_count }}</div>
+            <div class="stat-label">Active Students</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ic-gold"><i class="fa-solid fa-inbox"></i></div>
+            <div class="stat-value" id="statRequests">{{ pending_count }}</div>
+            <div class="stat-label">Pending Requests</div>
+            <div class="stat-trend" id="statReqSub">{% if pending_count %}Review now{% else %}All caught up{% endif %}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ic-blue"><i class="fa-solid fa-book-open"></i></div>
+            <div class="stat-value" id="statNotes">{{ notes_count }}</div>
+            <div class="stat-label">Shared Notes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ic-green"><i class="fa-solid fa-star"></i></div>
+            <div class="stat-value">4.9</div>
+            <div class="stat-label">Mentor Rating</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Pending Requests</span>
+              <button class="card-act" type="button" onclick="showSection('requests')">View all</button>
+            </div>
+            <div id="dashRequests">
+              {% for mentorship_request in pending_requests|slice:":2" %}
+              <div class="req-item" data-dashboard-request>
+                <div class="req-hdr">
+                  <div class="req-av">{% if mentorship_request.student.profile.avatar_image %}<img class="avatar-img" src="{{ mentorship_request.student.profile.avatar_image.url }}" alt="{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }}">{% else %}{{ mentorship_request.student.profile.avatar|default:"S" }}{% endif %}</div>
+                  <div>
+                    <div class="req-name">{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }}</div>
+                    <div class="req-meta">{{ mentorship_request.topic }} | {{ mentorship_request.created_at|date:"M d, Y" }}</div>
+                  </div>
+                </div>
+                {% if mentorship_request.message %}
+                <div class="req-msg">{{ mentorship_request.message }}</div>
+                {% endif %}
+                <div class="req-actions">
+                  <button class="btn-teal" type="button" onclick="showSection('requests')"><i class="fa-solid fa-inbox"></i>Review request</button>
+                </div>
+              </div>
+              {% empty %}
+                <div class="empty"><i class="fa-solid fa-inbox"></i><p>No pending requests.</p></div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Active Students</span>
+              <button class="card-act" type="button" onclick="showSection('students')">View all</button>
+            </div>
+            <div id="dashStudents">
+              {% for accepted_request in accepted_requests|slice:":3" %}
+              <div class="student-item" data-student-row>
+                <div class="req-av">{% if accepted_request.student.profile.avatar_image %}<img class="avatar-img" src="{{ accepted_request.student.profile.avatar_image.url }}" alt="{{ accepted_request.student.get_full_name|default:accepted_request.student.username }}">{% else %}{{ accepted_request.student.profile.avatar|default:"S" }}{% endif %}</div>
+                <div>
+                  <div class="student-name">{{ accepted_request.student.get_full_name|default:accepted_request.student.username }}</div>
+                  <div class="student-meta">{{ accepted_request.topic }} | {{ accepted_request.student.email }}</div>
+                </div>
+                <span class="status-conn">Active</span>
+              </div>
+              {% empty %}
+                <div class="empty"><i class="fa-solid fa-users"></i><p>No active students yet.</p></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Recent Activity</span>
+            <button class="card-act" type="button" onclick="showSection('notifications')">See all</button>
+          </div>
+          <div id="dashActivity">
+            {% for mentorship_request in pending_requests|slice:":2" %}
+            <div class="notif-item">
+              <div class="req-av">{% if mentorship_request.student.profile.avatar_image %}<img class="avatar-img" src="{{ mentorship_request.student.profile.avatar_image.url }}" alt="{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }}">{% else %}{{ mentorship_request.student.profile.avatar|default:"S" }}{% endif %}</div>
+              <div>
+                <div class="req-name">{{ mentorship_request.student.get_full_name|default:mentorship_request.student.username }} requested mentorship</div>
+                <div class="req-meta">{{ mentorship_request.topic }} | {{ mentorship_request.created_at|date:"M d, Y" }}</div>
+              </div>
+            </div>
+            {% endfor %}
+            {% for note in notes|slice:":2" %}
+            <div class="notif-item">
+              <div class="req-av"><i class="fa-solid fa-book-open"></i></div>
+              <div>
+                <div class="req-name">You shared "{{ note.title }}"</div>
+                <div class="req-meta">{{ note.tech }} | {{ note.created_at|date:"M d, Y" }}</div>
+              </div>
+            </div>
+            {% empty %}
+              {% if not pending_requests %}
+              <div class="empty"><i class="fa-solid fa-bell"></i><p>No recent activity yet.</p></div>
+              {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>

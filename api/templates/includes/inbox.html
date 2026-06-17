@@ -1,0 +1,37 @@
+<section id="sec-inbox" class="page-section hidden">
+  <div class="inbox-shell">
+    <aside class="inbox-list-card">
+      <div class="card-hdr">
+        <span class="card-title">Inbox</span>
+        <span class="tag" id="inboxThreadCount">0 chats</span>
+      </div>
+      <div class="inbox-thread-list" id="inboxThreadList">
+        <div class="empty" id="inboxEmpty"><i class="fa-solid fa-message"></i><p>No conversations yet.</p></div>
+      </div>
+    </aside>
+
+    <section class="inbox-chat-card" id="inboxChatCard">
+      <div class="inbox-chat-empty" id="inboxChatEmpty">
+        <i class="fa-solid fa-comments"></i>
+        <p>Select a conversation to start chatting.</p>
+      </div>
+
+      <div class="inbox-chat hidden" id="inboxChat">
+        <div class="inbox-chat-head">
+          <div class="inbox-chat-person">
+            <div class="person-avatar" id="inboxPartnerAvatar">U</div>
+            <div>
+              <div class="person-name" id="inboxPartnerName">Conversation</div>
+              <div class="person-meta" id="inboxPartnerMeta">Connected</div>
+            </div>
+          </div>
+        </div>
+        <div class="inbox-messages" id="inboxMessages"></div>
+        <form class="inbox-compose" id="inboxCompose">
+          <input class="form-input" id="inboxMessageInput" maxlength="1000" autocomplete="off" placeholder="Type a message">
+          <button class="btn-teal" type="submit"><i class="fa-solid fa-paper-plane"></i>Send</button>
+        </form>
+      </div>
+    </section>
+  </div>
+</section>

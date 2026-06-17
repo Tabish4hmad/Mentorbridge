@@ -1,0 +1,32 @@
+      <section id="sec-notifications" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Notifications</span>
+            <button class="card-act" type="button" onclick="toast('Notifications marked as read.')">Mark all read</button>
+          </div>
+          <div>
+            {% for mentor_message in mentor_messages %}
+            <div class="notif-item">
+              <div class="person-avatar">{% if mentor_message.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ mentor_message.mentor.profile.avatar_image.url }}" alt="{{ mentor_message.mentor.get_full_name|default:mentor_message.mentor.username }}">{% else %}{{ mentor_message.mentor.profile.avatar|default:"M" }}{% endif %}</div>
+              <div>
+                <div class="person-name">Message from {{ mentor_message.mentor.get_full_name|default:mentor_message.mentor.username }}</div>
+                <div class="person-meta">{{ mentor_message.message }} | {{ mentor_message.created_at|date:"M d, Y" }}</div>
+              </div>
+            </div>
+            {% endfor %}
+            {% for mentorship_request in mentorship_requests %}
+            <div class="notif-item">
+              <div class="person-avatar">{% if mentorship_request.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ mentorship_request.mentor.profile.avatar_image.url }}" alt="{{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }}">{% else %}{{ mentorship_request.mentor.profile.avatar|default:"M" }}{% endif %}</div>
+              <div>
+                <div class="person-name">{{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }} request is {{ mentorship_request.status }}</div>
+                <div class="person-meta">{{ mentorship_request.topic }} | {{ mentorship_request.updated_at|date:"M d, Y" }}</div>
+              </div>
+            </div>
+            {% empty %}
+            {% if not mentor_messages %}
+            <div class="empty"><i class="fa-solid fa-bell"></i><p>No notifications yet.</p></div>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </section>

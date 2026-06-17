@@ -1,0 +1,47 @@
+      <section id="sec-students" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr"><span class="card-title">Connected Students</span></div>
+          <div id="studentList">
+            {% for accepted_request in accepted_requests %}
+            <div class="student-item" data-student-row data-student-id="{{ accepted_request.student.id }}" data-student="{{ accepted_request.student.get_full_name|default:accepted_request.student.username }}" data-initials="{{ accepted_request.student.profile.avatar|default:"S" }}" data-avatar-url="{% if accepted_request.student.profile.avatar_image %}{{ accepted_request.student.profile.avatar_image.url }}{% endif %}" data-topic="{{ accepted_request.topic }}" data-email="{{ accepted_request.student.email }}" data-mobile="{{ accepted_request.student.profile.mobile|default:"Not set" }}" data-institute="{{ accepted_request.student.profile.institute|default:"Not set" }}" data-address="{{ accepted_request.student.profile.address|default:"Not set" }}" tabindex="0" role="button" aria-label="Open {{ accepted_request.student.get_full_name|default:accepted_request.student.username }} profile">
+              <div class="req-av">{% if accepted_request.student.profile.avatar_image %}<img class="avatar-img" src="{{ accepted_request.student.profile.avatar_image.url }}" alt="{{ accepted_request.student.get_full_name|default:accepted_request.student.username }}">{% else %}{{ accepted_request.student.profile.avatar|default:"S" }}{% endif %}</div>
+              <div>
+                <div class="student-name">{{ accepted_request.student.get_full_name|default:accepted_request.student.username }}</div>
+                <div class="student-meta">{{ accepted_request.topic }} | {{ accepted_request.student.email }}</div>
+              </div>
+              <span class="status-conn">Connected</span>
+            </div>
+            {% empty %}
+            <div class="empty" id="studentEmpty"><i class="fa-solid fa-users"></i><p>No connected students yet.</p></div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="card hidden" id="studentDetailPanel" style="margin-top:1.5rem;">
+          <div class="card-hdr">
+            <span class="card-title">Student Profile</span>
+            <button class="card-act" type="button" id="closeStudentDetail">Close</button>
+          </div>
+          <div class="detail-panel">
+            <div class="detail-avatar" id="studentDetailAvatar">S</div>
+            <div>
+              <div class="profile-name" id="studentDetailName">Student</div>
+              <span class="tag" id="studentDetailTopic">Mentorship</span>
+              <div class="detail-grid">
+                <div class="detail-item"><div class="info-label">Email</div><div class="info-value" id="studentDetailEmail">Not set</div></div>
+                <div class="detail-item"><div class="info-label">Mobile</div><div class="info-value" id="studentDetailMobile">Not set</div></div>
+                <div class="detail-item"><div class="info-label">Institute</div><div class="info-value" id="studentDetailInstitute">Not set</div></div>
+                <div class="detail-item"><div class="info-label">Address</div><div class="info-value" id="studentDetailAddress">Not set</div></div>
+              </div>
+            </div>
+          </div>
+          <form id="studentMessageForm" style="margin-top:1.2rem;">
+            <input type="hidden" id="studentMessageTarget">
+            <div class="form-group">
+              <label class="form-label" for="studentMessageText">Follow-up message</label>
+              <textarea class="form-textarea" id="studentMessageText" maxlength="500" placeholder="Write a short follow-up for this student."></textarea>
+            </div>
+            <button class="btn-teal" type="submit"><i class="fa-solid fa-message"></i>Send Message</button>
+          </form>
+        </div>
+      </section>

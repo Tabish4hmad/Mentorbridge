@@ -1,0 +1,23 @@
+      <section id="sec-requests" class="page-section hidden">
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Your Requests</span>
+            <span class="muted" id="requestCountLabel">{{ pending_count }} pending</span>
+          </div>
+          <div id="requestList">
+            {% for mentorship_request in mentorship_requests %}
+            <div class="person-row request-row" data-request-row data-status="{{ mentorship_request.status }}" data-mentor="{{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }}">
+              <div class="person-avatar">{% if mentorship_request.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ mentorship_request.mentor.profile.avatar_image.url }}" alt="{{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }}">{% else %}{{ mentorship_request.mentor.profile.avatar|default:"M" }}{% endif %}</div>
+              <div class="person-main">
+                <div class="person-name">{{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }}</div>
+                <div class="person-meta">{{ mentorship_request.topic }} | {{ mentorship_request.mentor.email }}</div>
+              </div>
+              <span class="status-pill {% if mentorship_request.status == 'pending' %}pending{% endif %}">{{ mentorship_request.status|title }}</span>
+            </div>
+            {% empty %}
+            <div class="empty" id="requestEmpty"><i class="fa-solid fa-paper-plane"></i><p>No requests yet. Find a mentor and send one.</p></div>
+            {% endfor %}
+          </div>
+          <div class="empty hidden" id="requestEmptyDynamic"><i class="fa-solid fa-paper-plane"></i><p>No requests yet. Find a mentor and send one.</p></div>
+        </div>
+      </section>

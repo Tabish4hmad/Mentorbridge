@@ -1,0 +1,101 @@
+      <section id="sec-dashboard" class="page-section">
+        <div class="welcome">
+          <h1>Welcome back, <span class="accent">{{ request.user.first_name|default:request.user.username }}</span></h1>
+          <p id="dashSubtitle">Find mentors, send requests, and access notes from accepted mentorships.</p>
+        </div>
+
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-icon ic-teal"><i class="fa-solid fa-user-group"></i></div>
+            <div class="stat-value" id="statConnections">{{ accepted_count }}</div>
+            <div class="stat-label">Connected Mentors</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ic-gold"><i class="fa-solid fa-paper-plane"></i></div>
+            <div class="stat-value" id="statRequests">{{ pending_count }}</div>
+            <div class="stat-label">Pending Requests</div>
+            <div class="stat-trend" id="statReqSub">{% if pending_count %}Waiting for mentor review{% else %}Ready to request{% endif %}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ic-blue"><i class="fa-solid fa-book-open"></i></div>
+            <div class="stat-value" id="statNotes">{{ notes_count }}</div>
+            <div class="stat-label">Available Notes</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon ic-green"><i class="fa-solid fa-chalkboard-user"></i></div>
+            <div class="stat-value">{{ mentors_count }}</div>
+            <div class="stat-label">Mentors Listed</div>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Next Steps</span>
+              <button class="card-act" type="button" onclick="showSection('mentors')">Find mentors</button>
+            </div>
+            <div class="task-item">
+              <div class="task-icon"><i class="fa-solid fa-bullseye"></i></div>
+              <div>
+                <div class="task-title">Pick a focus area</div>
+                <div class="task-copy">Choose a mentor whose expertise matches the skill you want to build.</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-icon"><i class="fa-solid fa-paper-plane"></i></div>
+              <div>
+                <div class="task-title">Send a request</div>
+                <div class="task-copy">Requested mentors appear in your Requests section immediately.</div>
+              </div>
+            </div>
+            <div class="task-item">
+              <div class="task-icon"><i class="fa-solid fa-book-open"></i></div>
+              <div>
+                <div class="task-title">Use shared notes</div>
+                <div class="task-copy">Accepted mentor notes appear when their topic matches your request.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr">
+              <span class="card-title">Connected Mentors</span>
+              <button class="card-act" type="button" onclick="showSection('connections')">View all</button>
+            </div>
+            <div id="dashConnections">
+              {% for accepted_request in accepted_requests|slice:":3" %}
+              <div class="person-row" data-connected-row>
+                <div class="person-avatar">{% if accepted_request.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ accepted_request.mentor.profile.avatar_image.url }}" alt="{{ accepted_request.mentor.get_full_name|default:accepted_request.mentor.username }}">{% else %}{{ accepted_request.mentor.profile.avatar|default:"M" }}{% endif %}</div>
+                <div class="person-main">
+                  <div class="person-name">{{ accepted_request.mentor.get_full_name|default:accepted_request.mentor.username }}</div>
+                  <div class="person-meta">{{ accepted_request.topic }} | {{ accepted_request.mentor.email }}</div>
+                </div>
+                <span class="status-pill">Connected</span>
+              </div>
+              {% empty %}
+              <div class="empty"><i class="fa-solid fa-user-group"></i><p>No connected mentors yet.</p></div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Recent Activity</span>
+            <button class="card-act" type="button" onclick="showSection('notifications')">See all</button>
+          </div>
+          <div id="dashActivity">
+            {% for mentorship_request in mentorship_requests|slice:":3" %}
+            <div class="notif-item">
+              <div class="person-avatar">{% if mentorship_request.mentor.profile.avatar_image %}<img class="avatar-img" src="{{ mentorship_request.mentor.profile.avatar_image.url }}" alt="{{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }}">{% else %}{{ mentorship_request.mentor.profile.avatar|default:"M" }}{% endif %}</div>
+              <div>
+                <div class="person-name">Request {{ mentorship_request.status }} with {{ mentorship_request.mentor.get_full_name|default:mentorship_request.mentor.username }}</div>
+                <div class="person-meta">{{ mentorship_request.topic }} | {{ mentorship_request.updated_at|date:"M d, Y" }}</div>
+              </div>
+            </div>
+            {% empty %}
+            <div class="empty"><i class="fa-solid fa-bell"></i><p>No activity yet. Send your first request.</p></div>
+            {% endfor %}
+          </div>
+        </div>
+      </section>

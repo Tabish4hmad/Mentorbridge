@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mentor Dashboard | MentorBridge</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/api/inbox.css">
+  <style>
+    :root {
+      --ink: #0d1f2d;
+      --teal: #0f9d8a;
+      --teal-light: #e0f5f2;
+      --teal-dark: #0a7a6c;
+      --gold: #e8a838;
+      --gold-light: #fdf3e0;
+      --slate: #3d5166;
+      --mist: #f4f7f9;
+      --white: #ffffff;
+      --border: rgba(13, 31, 45, .10);
+      --shadow: 0 2px 16px rgba(13, 31, 45, .08);
+      --shadow-lg: 0 8px 40px rgba(13, 31, 45, .14);
+      --sidebar-width: 260px;
+      --display: "Playfair Display", Georgia, serif;
+      --body: "DM Sans", Arial, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--mist);
+      color: var(--ink);
+      font-family: var(--body);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #0a1a28;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 50;
+    }
+
+    .sidebar-logo {
+      padding: 1.6rem 1.5rem 1.2rem;
+      font-family: var(--display);
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      text-decoration: none;
+    }
+
+    .logo-dot,
+    .mentor-pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: inline-block;
+    }
+
+    .sidebar-user {
+      padding: 1.2rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .avatar,
+    .avatar-sm,
+    .req-av {
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .avatar-img {
+      width: 100%;
+      height: 100%;
+      border-radius: inherit;
+      object-fit: cover;
+      display: block;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      background: rgba(232, 168, 56, .20);
+      color: var(--gold);
+      border: 2px solid rgba(232, 168, 56, .30);
+      font-size: .82rem;
+    }
+
+    .sidebar-user-name {
+      color: #fff;
+      font-size: .88rem;
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 160px;
+    }
+
+    .sidebar-user-role {
+      color: rgba(232, 168, 56, .75);
+      font-size: .72rem;
+      margin-top: 1px;
+    }
+
+    .sidebar-nav {
+      padding: 1rem 0;
+      flex: 1;
+      overflow-y: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .sidebar-nav::-webkit-scrollbar {
+      display: none;
+    }
+
+    .nav-label {
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, .25);
+      padding: .8rem 1.5rem .4rem;
+    }
+
+    .nav-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: .65rem 1.5rem;
+      color: rgba(255, 255, 255, .55);
+      font-size: .88rem;
+      cursor: pointer;
+      transition: all .18s;
+      border: 0;
+      border-left: 3px solid transparent;
+      background: transparent;
+      text-decoration: none;
+      font-family: var(--body);
+      text-align: left;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      color: #fff;
+      background: rgba(232, 168, 56, .10);
+      border-left-color: var(--gold);
+    }
+
+    .nav-item i {
+      width: 18px;
+      text-align: center;
+    }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: #fff;
+      font-size: .65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 999px;
+    }
+
+    .sidebar-bottom {
+      padding: 1rem 1.5rem 1.5rem;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .logout-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, .45);
+      font-size: .85rem;
+      cursor: pointer;
+      background: transparent;
+      border: 0;
+      font-family: var(--body);
+      padding: 0;
+    }
+
+    .logout-btn:hover {
+      color: rgba(255, 255, 255, .85);
+    }
+
+    .main {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2.5rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .page-title {
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .mentor-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gold-light);
+      border: 1px solid rgba(232, 168, 56, .25);
+      color: #7a5200;
+      padding: 5px 14px;
+      border-radius: 999px;
+      font-size: .78rem;
+      font-weight: 700;
+      max-width: 280px;
+    }
+
+    .mentor-pill span:last-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .notif-btn,
+    .profile-trigger {
+      border: 1px solid var(--border);
+      background: var(--mist);
+      cursor: pointer;
+      color: var(--slate);
+      font-family: var(--body);
+    }
+
+    .notif-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .avatar-sm {
+      width: 36px;
+      height: 36px;
+      background: rgba(232, 168, 56, .15);
+      color: var(--gold);
+      border: 2px solid var(--gold-light);
+      font-size: .78rem;
+    }
+
+    .profile-menu-wrap {
+      position: relative;
+    }
+
+    .profile-trigger {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      padding: 3px 9px 3px 3px;
+    }
+
+    .profile-dropdown {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 12px);
+      width: 260px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-lg);
+      padding: .55rem;
+      display: none;
+      z-index: 100;
+    }
+
+    .profile-dropdown.show {
+      display: block;
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: .75rem;
+      border-radius: var(--radius-sm);
+      background: var(--mist);
+      margin-bottom: .45rem;
+      min-width: 0;
+    }
+
+    .profile-mini-name {
+      font-size: .88rem;
+      font-weight: 700;
+    }
+
+    .profile-mini-email {
+      font-size: .72rem;
+      color: var(--slate);
+      margin-top: 2px;
+      max-width: 170px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .dropdown-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: transparent;
+      border: 0;
+      color: var(--slate);
+      font-family: var(--body);
+      font-size: .86rem;
+      font-weight: 600;
+      text-align: left;
+      padding: .72rem .75rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .dropdown-item:hover {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+    }
+
+    .dropdown-divider {
+      height: 1px;
+      background: var(--border);
+      margin: .45rem 0;
+    }
+
+    .dropdown-item.danger {
+      color: #c0274a;
+    }
+
+    .content {
+      padding: 2rem 2.5rem;
+      flex: 1;
+    }
+
+    .page-section {
+      animation: fadeIn .24s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .welcome {
+      margin-bottom: 1.5rem;
+    }
+
+    .welcome h1,
+    .profile-name {
+      font-family: var(--display);
+      letter-spacing: 0;
+    }
+
+    .welcome h1 {
+      font-size: clamp(1.5rem, 3vw, 1.9rem);
+      margin: 0 0 4px;
+    }
+
+    .welcome p {
+      margin: 0;
+      color: var(--slate);
+      font-size: .9rem;
+      line-height: 1.55;
+    }
+
+    .accent {
+      color: var(--gold);
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-card,
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow);
+    }
+
+    .stat-card {
+      padding: 1.2rem 1.4rem;
+    }
+
+    .stat-icon,
+    .info-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      margin-bottom: .9rem;
+    }
+
+    .ic-teal {
+      background: var(--teal-light);
+      color: var(--teal);
+    }
+
+    .ic-gold {
+      background: var(--gold-light);
+      color: var(--gold);
+    }
+
+    .ic-blue {
+      background: #ebf4ff;
+      color: #3b82f6;
+    }
+
+    .ic-green {
+      background: #edf7f0;
+      color: #1a6b3a;
+    }
+
+    .stat-value {
+      font-family: var(--display);
+      font-size: 1.7rem;
+      font-weight: 700;
+    }
+
+    .stat-label {
+      font-size: .78rem;
+      color: var(--slate);
+      margin-top: 2px;
+    }
+
+    .stat-trend {
+      font-size: .72rem;
+      color: var(--teal);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1.35fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .card {
+      padding: 1.4rem;
+    }
+
+    .card-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .card-title {
+      font-size: .95rem;
+      font-weight: 700;
+    }
+
+    .card-act {
+      border: 0;
+      background: transparent;
+      color: var(--teal);
+      cursor: pointer;
+      font-weight: 700;
+      font-family: var(--body);
+      font-size: .78rem;
+      text-decoration: none;
+    }
+
+    .req-item,
+    .student-item,
+    .note-item,
+    .notif-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.05rem;
+      margin-bottom: .85rem;
+      background: #fff;
+    }
+
+    .req-hdr,
+    .student-item,
+    .note-top,
+    .notif-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .req-av {
+      width: 40px;
+      height: 40px;
+      background: rgba(15, 157, 138, .15);
+      color: var(--teal);
+      font-size: .82rem;
+    }
+
+    .req-name,
+    .student-name,
+    .note-title {
+      font-size: .92rem;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .req-meta,
+    .student-meta,
+    .note-meta,
+    .muted {
+      font-size: .76rem;
+      color: var(--slate);
+      line-height: 1.45;
+    }
+
+    .req-msg {
+      font-size: .84rem;
+      color: var(--slate);
+      line-height: 1.55;
+      padding: .75rem;
+      background: var(--mist);
+      border-radius: var(--radius-sm);
+      margin: .75rem 0 .85rem;
+      white-space: pre-wrap;
+    }
+
+    .req-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-teal,
+    .btn-outline,
+    .btn-danger {
+      border-radius: var(--radius-sm);
+      font-family: var(--body);
+      font-size: .84rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 36px;
+      padding: .55rem 1rem;
+      text-decoration: none;
+    }
+
+    .btn-teal {
+      background: var(--teal);
+      border: 1px solid var(--teal);
+      color: #fff;
+    }
+
+    .btn-teal:hover {
+      background: var(--teal-dark);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--slate);
+    }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid rgba(220, 60, 60, .30);
+      color: #c0274a;
+    }
+
+    .status-conn,
+    .tag {
+      border-radius: 999px;
+      font-size: .72rem;
+      font-weight: 700;
+      white-space: nowrap;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .status-conn {
+      background: var(--teal-light);
+      color: var(--teal-dark);
+      padding: 4px 10px;
+      margin-left: auto;
+    }
+
+    .student-item {
+      cursor: pointer;
+    }
+
+    .student-item:hover,
+    .student-item:focus {
+      border-color: rgba(15, 157, 138, .35);
+      box-shadow: 0 8px 28px rgba(13, 31, 45, .08);
+      outline: none;
+    }
+
+    .tag {
+      background: var(--gold-light);
+      color: #7a5200;
+      border: 1px solid rgba(232, 168, 56, .25);
+      padding: 4px 12px;
+    }
+
+    .note-item p {
+      color: var(--slate);
+      line-height: 1.55;
+      margin: .55rem 0 0;
+      white-space: pre-wrap;
+      font-size: .88rem;
+    }
+
+    .doc-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: .75rem;
+      color: var(--teal-dark);
+      font-weight: 700;
+      text-decoration: none;
+      overflow-wrap: anywhere;
+      font-size: .84rem;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    .form-label {
+      display: block;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--slate);
+      margin-bottom: 6px;
+    }
+
+    .form-input,
+    .form-textarea,
+    .form-select {
+      width: 100%;
+      background: var(--mist);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .65rem .9rem;
+      font-family: var(--body);
+      font-size: .88rem;
+      color: var(--ink);
+      outline: none;
+    }
+
+    .form-input:focus,
+    .form-textarea:focus,
+    .form-select:focus {
+      border-color: var(--teal);
+      background: #fff;
+    }
+
+    .form-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .detail-panel {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 1.2rem;
+      align-items: start;
+    }
+
+    .detail-avatar {
+      width: 86px;
+      height: 86px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gold-light);
+      color: var(--gold);
+      font-family: var(--display);
+      font-size: 1.8rem;
+      font-weight: 700;
+      border: 4px solid #fff;
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1rem;
+      margin-top: 1.2rem;
+    }
+
+    .detail-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      background: var(--mist);
+    }
+
+    .profile-cover {
+      height: 140px;
+      background: linear-gradient(135deg, #0a1a28 0%, #1c4860 42%, #e8a838 100%);
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+      position: relative;
+      overflow: hidden;
+      margin: -1.4rem -1.4rem 0;
+    }
+
+    .profile-cover::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(255, 255, 255, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .05) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+
+    .profile-head {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: -36px;
+      padding-bottom: 1.1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-head > div:last-child {
+      min-width: 0;
+      padding-top: 36px;
+    }
+
+    .profile-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gold-light);
+      border: 4px solid #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--display);
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--gold);
+      box-shadow: var(--shadow);
+      flex-shrink: 0;
+    }
+
+    .profile-avatar-wrap {
+      position: relative;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
+    }
+
+    .profile-avatar-wrap .profile-avatar {
+      width: 100%;
+      height: 100%;
+    }
+
+    .avatar-upload-btn {
+      position: absolute;
+      right: -2px;
+      bottom: -2px;
+      width: 34px;
+      height: 34px;
+      border-radius: var(--radius-sm);
+      border: 3px solid #fff;
+      background: #fff;
+      color: var(--ink);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .95rem;
+    }
+
+    .avatar-upload-btn:hover {
+      color: #7a5200;
+      background: var(--gold-light);
+    }
+
+    .profile-name {
+      font-size: 1.45rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+      line-height: 1.15;
+      overflow-wrap: anywhere;
+    }
+
+    .info-list {
+      display: grid;
+      gap: .85rem;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: .85rem;
+    }
+
+    .info-icon {
+      width: 30px;
+      height: 30px;
+      margin: 0;
+      background: var(--mist);
+      color: var(--slate);
+      font-size: .78rem;
+      flex-shrink: 0;
+    }
+
+    .info-label {
+      font-size: .72rem;
+      color: var(--slate);
+    }
+
+    .info-value {
+      font-weight: 700;
+      overflow-wrap: anywhere;
+    }
+
+    .avail-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 1.2rem;
+    }
+
+    .avail-day {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: .65rem .4rem;
+      text-align: center;
+      cursor: pointer;
+      background: #fff;
+    }
+
+    .avail-day.on {
+      background: var(--teal-light);
+      border-color: var(--teal);
+    }
+
+    .day-name {
+      font-size: .72rem;
+      font-weight: 700;
+      color: var(--slate);
+    }
+
+    .day-status {
+      font-size: .66rem;
+      margin-top: 3px;
+      color: var(--slate);
+    }
+
+    .avail-day.on .day-status,
+    .avail-day.on .day-name {
+      color: var(--teal-dark);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--slate);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      background: #fff;
+    }
+
+    .empty i {
+      font-size: 2rem;
+      margin-bottom: .8rem;
+      color: rgba(13, 31, 45, .18);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      z-index: 999;
+      background: var(--ink);
+      border: 1px solid rgba(232, 168, 56, .30);
+      border-radius: var(--radius-md);
+      padding: .9rem 1.3rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .85rem;
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all .3s;
+      min-width: 260px;
+      max-width: min(380px, calc(100vw - 32px));
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast i {
+      color: var(--gold);
+    }
+
+    @media (max-width: 1100px) {
+      .stats-row {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+
+      .avail-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: static;
+        width: 100%;
+        min-height: auto;
+      }
+
+      .main {
+        margin-left: 0;
+      }
+
+      .topbar {
+        padding: 0 1rem;
+      }
+
+      .content {
+        padding: 1.25rem;
+      }
+
+      .topbar-right {
+        gap: .5rem;
+      }
+
+      .mentor-pill {
+        display: none;
+      }
+
+      .form-grid,
+      .stats-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .student-item,
+      .req-hdr,
+      .note-top {
+        align-items: flex-start;
+      }
+
+      .status-conn {
+        margin-left: 0;
+      }
+
+      .profile-head {
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <aside class="sidebar">
+    <a href="/" class="sidebar-logo"><span class="logo-dot"></span>MentorBridge</a>
+    <div class="sidebar-user">
+      <div class="avatar" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"M" }}{% endif %}</div>
+      <div>
+        <div class="sidebar-user-name">{{ full_name|default:request.user.username }}</div>
+        <div class="sidebar-user-role">Mentor</div>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav" aria-label="Mentor dashboard navigation">
+      <div class="nav-label">Main</div>
+      <button class="nav-item active" type="button" data-section="dashboard"><i class="fa-solid fa-house"></i>Dashboard</button>
+      <button class="nav-item" type="button" data-section="profile"><i class="fa-solid fa-user"></i>My Profile</button>
+      <div class="nav-label">Students</div>
+      <button class="nav-item" type="button" data-section="requests"><i class="fa-solid fa-inbox"></i>Requests <span class="nav-badge" id="reqBadge">{{ pending_count }}</span></button>
+      <button class="nav-item" type="button" data-section="students"><i class="fa-solid fa-users"></i>My Students</button>
+      <button class="nav-item" type="button" data-section="inbox"><i class="fa-solid fa-message"></i>Inbox</button>
+      <button class="nav-item" type="button" data-section="notes"><i class="fa-solid fa-book-open"></i>Notes</button>
+      <div class="nav-label">Manage</div>
+      <button class="nav-item" type="button" data-section="availability"><i class="fa-solid fa-calendar-days"></i>Availability</button>
+      <button class="nav-item" type="button" data-section="notifications"><i class="fa-solid fa-bell"></i>Notifications</button>
+      <button class="nav-item" type="button" data-section="settings"><i class="fa-solid fa-gear"></i>Settings</button>
+    </nav>
+
+    <div class="sidebar-bottom">
+      <button class="logout-btn" type="button" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign out</button>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <span class="page-title" id="pageTitle">Dashboard</span>
+      <div class="topbar-right">
+        <div class="mentor-pill"><span class="mentor-pill-dot"></span><span id="topExpertiseText">{{ profile.expertise|default:"Mentor" }}</span></div>
+        <button class="notif-btn" type="button" onclick="showSection('notifications')" aria-label="Open notifications"><i class="fa-solid fa-bell"></i></button>
+        <div class="profile-menu-wrap">
+          <button class="profile-trigger" id="profileTrigger" type="button" onclick="toggleProfileMenu(event)" aria-label="Open profile menu" aria-expanded="false">
+            <span class="avatar-sm" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"M" }}{% endif %}</span>
+            <i class="fa-solid fa-chevron-down"></i>
+          </button>
+          <div class="profile-dropdown" id="profileDropdown" onclick="event.stopPropagation()">
+            <div class="profile-mini">
+              <div class="avatar" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"M" }}{% endif %}</div>
+              <div>
+                <div class="profile-mini-name">{{ full_name|default:request.user.username }}</div>
+                <div class="profile-mini-email">{{ request.user.email }}</div>
+              </div>
+            </div>
+            <button class="dropdown-item" type="button" onclick="goMenu('profile')"><i class="fa-solid fa-user"></i>View Profile</button>
+            <button class="dropdown-item" type="button" onclick="goMenu('settings')"><i class="fa-solid fa-gear"></i>Settings</button>
+            <button class="dropdown-item" type="button" onclick="goMenu('notifications')"><i class="fa-solid fa-bell"></i>Notifications</button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item danger" type="button" onclick="doLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i>Sign out</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="content">
+      {% include "dashboards/mentor/sections/dashboard.html" %}
+
+      {% include "dashboards/mentor/sections/profile.html" %}
+
+      {% include "dashboards/mentor/sections/requests.html" %}
+
+      {% include "dashboards/mentor/sections/students.html" %}
+
+      {% include "dashboards/mentor/sections/notes.html" %}
+
+      {% include "dashboards/mentor/sections/availability.html" %}
+
+      {% include "includes/inbox.html" %}
+
+      {% include "dashboards/mentor/sections/notifications.html" %}
+
+      {% include "dashboards/mentor/sections/settings.html" %}
+    </div>
+  </main>
+
+  <div class="toast" id="toast"><i class="fa-solid fa-circle-check"></i><span id="toastMsg"></span></div>
+
+  <script>
+    const sections = ['dashboard', 'profile', 'requests', 'students', 'inbox', 'notes', 'availability', 'notifications', 'settings'];
+    const titles = {
+      dashboard: 'Dashboard',
+      profile: 'My Profile',
+      requests: 'Mentorship Requests',
+      students: 'My Students',
+      inbox: 'Inbox',
+      notes: 'Notes',
+      availability: 'Availability',
+      notifications: 'Notifications',
+      settings: 'Settings'
+    };
+
+    const requestList = document.getElementById('requestList');
+    const studentList = document.getElementById('studentList');
+    const noteList = document.getElementById('noteList');
+
+    function getInitialSection() {
+      const hashSection = window.location.hash.replace(/^#\/?/, '');
+      return sections.includes(hashSection) ? hashSection : 'dashboard';
+    }
+
+    function showSection(name, options = {}) {
+      if (!sections.includes(name)) name = 'dashboard';
+      sections.forEach(section => {
+        document.getElementById(`sec-${section}`).classList.toggle('hidden', section !== name);
+      });
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.classList.toggle('active', item.dataset.section === name);
+      });
+      document.getElementById('pageTitle').textContent = titles[name] || name;
+      if (!options.skipHash) {
+        const nextHash = name === 'dashboard' ? '#/dashboard' : `#/${name}`;
+        if (window.location.hash !== nextHash) {
+          history.pushState(null, '', nextHash);
+        }
+      }
+      closeProfileMenu();
+    }
+
+    document.querySelectorAll('[data-section]').forEach(button => {
+      button.addEventListener('click', () => showSection(button.dataset.section));
+    });
+
+    window.addEventListener('hashchange', () => {
+      showSection(getInitialSection(), {skipHash: true});
+    });
+
+    function toggleProfileMenu(event) {
+      event.stopPropagation();
+      const menu = document.getElementById('profileDropdown');
+      const trigger = document.getElementById('profileTrigger');
+      const isOpen = menu.classList.toggle('show');
+      trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    }
+
+    function closeProfileMenu() {
+      const menu = document.getElementById('profileDropdown');
+      const trigger = document.getElementById('profileTrigger');
+      if (!menu || !trigger) return;
+      menu.classList.remove('show');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    function goMenu(section) {
+      showSection(section);
+    }
+
+    document.addEventListener('click', closeProfileMenu);
+    document.addEventListener('keydown', event => {
+      if (event.key === 'Escape') closeProfileMenu();
+    });
+
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+          cookie = cookie.trim();
+          if (cookie.startsWith(name + '=')) {
+            cookieValue = decodeURIComponent(cookie.slice(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+
+    function escapeHTML(value) {
+      const div = document.createElement('div');
+      div.textContent = value || '';
+      return div.innerHTML;
+    }
+
+    function avatarHTML(initials, url, alt = '') {
+      return url
+        ? `<img class="avatar-img" src="${escapeHTML(url)}" alt="${escapeHTML(alt)}">`
+        : escapeHTML(initials || 'U');
+    }
+
+    let toastTimer;
+    function toast(message) {
+      document.getElementById('toastMsg').textContent = message;
+      const el = document.getElementById('toast');
+      el.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => el.classList.remove('show'), 3200);
+    }
+
+    function syncCounts() {
+      const pending = requestList.querySelectorAll('[data-request-id]').length;
+      const students = studentList.querySelectorAll('[data-student-row]').length;
+      const notes = noteList.querySelectorAll('[data-note-card]').length;
+      document.getElementById('statRequests').textContent = pending;
+      document.getElementById('statStudents').textContent = students;
+      document.getElementById('statNotes').textContent = notes;
+      document.getElementById('reqBadge').textContent = pending;
+      document.getElementById('reqBadge').style.display = pending ? 'inline-flex' : 'none';
+      document.getElementById('requestCountLabel').textContent = `${pending} pending`;
+      document.getElementById('statReqSub').textContent = pending ? 'Review now' : 'All caught up';
+      document.getElementById('dashSubtitle').textContent = pending
+        ? `${pending} pending mentorship request${pending === 1 ? '' : 's'} waiting for your review.`
+        : 'Everything is up to date. Great work.';
+      document.getElementById('requestEmptyDynamic').classList.toggle('hidden', pending !== 0);
+      const studentEmpty = document.getElementById('studentEmpty');
+      if (studentEmpty) studentEmpty.classList.toggle('hidden', students !== 0);
+      const noteEmpty = document.getElementById('noteEmpty');
+      if (noteEmpty) noteEmpty.classList.toggle('hidden', notes !== 0);
+    }
+
+    function openStudentDetail(row) {
+      document.getElementById('studentDetailAvatar').innerHTML = avatarHTML(row.dataset.initials || 'S', row.dataset.avatarUrl || '', row.dataset.student || 'Student');
+      document.getElementById('studentDetailName').textContent = row.dataset.student || 'Student';
+      document.getElementById('studentDetailTopic').textContent = row.dataset.topic || 'Mentorship';
+      document.getElementById('studentDetailEmail').textContent = row.dataset.email || 'Not set';
+      document.getElementById('studentDetailMobile').textContent = row.dataset.mobile || 'Not set';
+      document.getElementById('studentDetailInstitute').textContent = row.dataset.institute || 'Not set';
+      document.getElementById('studentDetailAddress').textContent = row.dataset.address || 'Not set';
+      document.getElementById('studentMessageTarget').value = row.dataset.studentId || '';
+      document.getElementById('studentMessageText').value = '';
+      document.getElementById('studentDetailPanel').classList.remove('hidden');
+      document.getElementById('studentDetailPanel').scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    }
+
+    studentList.addEventListener('click', event => {
+      const row = event.target.closest('[data-student-row]');
+      if (row) openStudentDetail(row);
+    });
+
+    studentList.addEventListener('keydown', event => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      const row = event.target.closest('[data-student-row]');
+      if (!row) return;
+      event.preventDefault();
+      openStudentDetail(row);
+    });
+
+    document.getElementById('closeStudentDetail').addEventListener('click', () => {
+      document.getElementById('studentDetailPanel').classList.add('hidden');
+    });
+
+    document.getElementById('studentMessageForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const studentId = document.getElementById('studentMessageTarget').value;
+      const message = document.getElementById('studentMessageText').value.trim();
+      if (!studentId || !message) {
+        toast('Choose a student and write a short message.');
+        return;
+      }
+
+      fetch('/api/messages/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({studentId, message})
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not send message.');
+            return;
+          }
+          document.getElementById('studentMessageText').value = '';
+          toast(`Message sent to ${result.message.studentName}.`);
+        })
+        .catch(() => toast('Could not send message. Try again.'));
+    });
+
+    function updateRequestStatus(requestEl, action) {
+      return fetch(`/api/requests/${requestEl.dataset.requestId}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({action})
+      }).then(response => response.json());
+    }
+
+    requestList.addEventListener('click', event => {
+      const button = event.target.closest('button');
+      if (!button) return;
+      const requestEl = event.target.closest('[data-request-id]');
+      if (!requestEl) return;
+
+      if (button.classList.contains('accept')) {
+        updateRequestStatus(requestEl, 'accept')
+          .then(result => {
+            if (!result.ok) {
+              toast(result.error || 'Could not accept request.');
+              return;
+            }
+            const student = result.request.student;
+            const row = document.createElement('div');
+            row.className = 'student-item';
+            row.dataset.studentRow = 'true';
+            row.dataset.studentId = student.id;
+            row.dataset.student = student.name;
+            row.dataset.initials = student.avatar || 'S';
+            row.dataset.avatarUrl = student.avatarUrl || '';
+            row.dataset.topic = result.request.topic;
+            row.dataset.email = student.email;
+            row.dataset.mobile = student.mobile || 'Not set';
+            row.dataset.institute = student.institute || 'Not set';
+            row.dataset.address = student.address || 'Not set';
+            row.tabIndex = 0;
+            row.setAttribute('role', 'button');
+            row.setAttribute('aria-label', `Open ${student.name} profile`);
+            row.innerHTML = `
+              <div class="req-av">${avatarHTML(student.avatar || 'S', student.avatarUrl, student.name)}</div>
+              <div>
+                <div class="student-name">${escapeHTML(student.name)}</div>
+                <div class="student-meta">${escapeHTML(result.request.topic)} | ${escapeHTML(student.email)}</div>
+              </div>
+              <span class="status-conn">Connected</span>
+            `;
+            studentList.prepend(row);
+            requestEl.remove();
+            syncCounts();
+            toast(`${requestEl.dataset.student} is now your student.`);
+          })
+          .catch(() => toast('Could not accept request. Try again.'));
+      }
+
+      if (button.classList.contains('decline')) {
+        updateRequestStatus(requestEl, 'decline')
+          .then(result => {
+            if (!result.ok) {
+              toast(result.error || 'Could not decline request.');
+              return;
+            }
+            toast(`${requestEl.dataset.student} request declined.`);
+            requestEl.remove();
+            syncCounts();
+          })
+          .catch(() => toast('Could not decline request. Try again.'));
+      }
+    });
+
+    document.getElementById('noteForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData();
+      const tech = document.getElementById('noteTech').value.trim();
+      const title = document.getElementById('noteTitle').value.trim();
+      const content = document.getElementById('noteContent').value.trim();
+      const documentFile = document.getElementById('noteDocument').files[0];
+      formData.append('tech', tech);
+      formData.append('title', title);
+      formData.append('content', content);
+      if (documentFile) formData.append('document', documentFile);
+
+      fetch('/api/notes/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        body: formData
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not upload note.');
+            return;
+          }
+          const note = result.note;
+          const card = document.createElement('article');
+          card.className = 'note-item';
+          card.dataset.noteCard = 'true';
+          const documentLink = note.documentUrl
+            ? `<a class="doc-link" href="${escapeHTML(note.documentUrl)}" target="_blank" rel="noopener"><i class="fa-solid fa-file-arrow-down"></i>${escapeHTML(note.documentName)}</a>`
+            : '';
+          const noteContent = note.content ? `<p>${escapeHTML(note.content)}</p>` : '';
+          card.innerHTML = `
+            <div class="note-top">
+              <div class="req-av"><i class="fa-solid fa-book-open"></i></div>
+              <div>
+                <div class="note-title">${escapeHTML(note.title)}</div>
+                <div class="note-meta">${escapeHTML(note.tech)} | ${escapeHTML(note.createdAt)}</div>
+              </div>
+            </div>
+            ${noteContent}
+            ${documentLink}
+          `;
+          noteList.prepend(card);
+          document.getElementById('noteTitle').value = '';
+          document.getElementById('noteContent').value = '';
+          document.getElementById('noteDocument').value = '';
+          syncCounts();
+          toast('Note uploaded for students.');
+        })
+        .catch(() => toast('Could not upload note. Try again.'));
+    });
+
+    document.getElementById('profileInfoForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const mobile = document.getElementById('profileMobileInput').value.trim();
+      const institute = document.getElementById('profileInstituteInput').value.trim();
+      const address = document.getElementById('profileAddressInput').value.trim();
+      const expertiseInput = document.getElementById('profileExpertiseInput').value.trim();
+      const currentExpertise = document.getElementById('profileExpertiseText').textContent.trim();
+      const expertiseParts = currentExpertise && currentExpertise !== 'Not set'
+        ? currentExpertise.split(',').map(item => item.trim()).filter(Boolean)
+        : [];
+      expertiseInput.split(',').map(item => item.trim()).filter(Boolean).forEach(item => {
+        const alreadyExists = expertiseParts.some(existing => existing.toLowerCase() === item.toLowerCase());
+        if (!alreadyExists) expertiseParts.push(item);
+      });
+      const expertise = expertiseParts.join(', ');
+
+      fetch('/api/profile/basic-info/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({mobile, institute, address, expertise})
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not save profile info.');
+            return;
+          }
+          document.getElementById('profileMobileText').textContent = result.user.mobile || 'Not set';
+          document.getElementById('profileInstituteText').textContent = result.user.institute || 'Not set';
+          document.getElementById('profileAddressText').textContent = result.user.address || 'Not set';
+          document.getElementById('profileExpertiseText').textContent = result.user.expertise || 'Not set';
+          document.getElementById('profileExpertiseTag').textContent = result.user.expertise || 'Mentor';
+          document.getElementById('topExpertiseText').textContent = result.user.expertise || 'Mentor';
+          document.getElementById('profileMobileInput').value = '';
+          document.getElementById('profileInstituteInput').value = '';
+          document.getElementById('profileAddressInput').value = '';
+          document.getElementById('profileExpertiseInput').value = '';
+          document.getElementById('profileMobileInput').placeholder = result.user.mobile || '+91 98765 43210';
+          document.getElementById('profileInstituteInput').placeholder = result.user.institute || 'College, university, or company';
+          document.getElementById('profileAddressInput').placeholder = result.user.address || 'City, State';
+          document.getElementById('profileExpertiseInput').placeholder = result.user.expertise || 'Django, React, Python';
+          toast('Profile info saved.');
+        })
+        .catch(() => toast('Could not save profile info. Try again.'));
+    });
+
+    document.getElementById('profileAvatarInput').addEventListener('change', () => {
+      const fileInput = document.getElementById('profileAvatarInput');
+      const file = fileInput.files[0];
+      if (!file) {
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('avatar', file);
+      fetch('/api/profile/avatar/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')},
+        body: formData
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not upload profile image.');
+            return;
+          }
+          document.querySelectorAll('[data-current-avatar]').forEach(el => {
+            el.innerHTML = avatarHTML(result.user.avatar || 'M', result.user.avatarUrl, `${result.user.firstName} ${result.user.lastName}`.trim());
+          });
+          fileInput.value = '';
+          toast('Profile image updated.');
+        })
+        .catch(() => toast('Could not upload profile image. Try again.'));
+    });
+
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const availability = [true, false, true, false, true, false, false];
+    function renderAvailability() {
+      document.getElementById('availGrid').innerHTML = days.map((day, index) => `
+        <button class="avail-day ${availability[index] ? 'on' : ''}" type="button" onclick="toggleDay(${index}, this)">
+          <div class="day-name">${day}</div>
+          <div class="day-status">${availability[index] ? 'On' : 'Off'}</div>
+        </button>
+      `).join('');
+    }
+
+    function toggleDay(index, element) {
+      availability[index] = !availability[index];
+      element.classList.toggle('on', availability[index]);
+      element.querySelector('.day-status').textContent = availability[index] ? 'On' : 'Off';
+    }
+
+    function saveAvailability() {
+      const activeDays = days.filter((day, index) => availability[index]);
+      const from = document.getElementById('avFrom').value;
+      const to = document.getElementById('avTo').value;
+      const availabilityText = `${activeDays.join(', ') || 'No days selected'} | ${from} to ${to}`;
+
+      fetch('/api/profile/basic-info/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({availability: availabilityText})
+      })
+        .then(response => response.json())
+        .then(result => {
+          if (!result.ok) {
+            toast(result.error || 'Could not save availability.');
+            return;
+          }
+          toast(`Availability saved: ${availabilityText}.`);
+        })
+        .catch(() => toast('Could not save availability. Try again.'));
+    }
+
+    function doLogout() {
+      fetch('/api/auth/logout/', {
+        method: 'POST',
+        headers: {'X-CSRFToken': getCookie('csrftoken')}
+      })
+        .then(() => {
+          window.location.href = '/';
+        })
+        .catch(() => {
+          window.location.href = '/';
+        });
+    }
+
+    renderAvailability();
+    syncCounts();
+    showSection(getInitialSection(), {skipHash: true});
+  </script>
+  <script src="/static/api/inbox.js"></script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+      <section id="sec-profile" class="page-section hidden">
+        <div class="two-col">
+          <div class="card">
+            <div class="profile-cover"></div>
+            <div class="profile-head">
+              <div class="profile-avatar-wrap">
+                <div class="profile-avatar" data-current-avatar>{% if profile.avatar_image %}<img class="avatar-img" src="{{ profile.avatar_image.url }}" alt="{{ full_name|default:request.user.username }}">{% else %}{{ profile.avatar|default:"M" }}{% endif %}</div>
+                <button class="avatar-upload-btn" type="button" onclick="document.getElementById('profileAvatarInput').click()" aria-label="Upload profile image"><i class="fa-solid fa-camera"></i></button>
+                <input id="profileAvatarInput" name="avatar" type="file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+              </div>
+              <div>
+                <div class="profile-name">{{ full_name|default:request.user.username }}</div>
+                <span class="tag" id="profileExpertiseTag">{{ profile.expertise|default:"Mentor" }}</span>
+              </div>
+            </div>
+            <p class="muted" style="margin-top:1rem;">Your public mentor details are shown to students when they browse mentors and request guidance.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Profile Details</span></div>
+            <div class="info-list">
+              <div class="info-item"><div class="info-icon"><i class="fa-solid fa-envelope"></i></div><div><div class="info-label">Email</div><div class="info-value">{{ request.user.email }}</div></div></div>
+              <div class="info-item"><div class="info-icon"><i class="fa-solid fa-user"></i></div><div><div class="info-label">Username</div><div class="info-value">@{{ request.user.username }}</div></div></div>
+              <div class="info-item"><div class="info-icon"><i class="fa-solid fa-briefcase"></i></div><div><div class="info-label">Expertise</div><div class="info-value" id="profileExpertiseText">{{ profile.expertise|default:"Not set" }}</div></div></div>
+              <div class="info-item"><div class="info-icon"><i class="fa-solid fa-phone"></i></div><div><div class="info-label">Mobile</div><div class="info-value" id="profileMobileText">{{ profile.mobile|default:"Not set" }}</div></div></div>
+              <div class="info-item"><div class="info-icon"><i class="fa-solid fa-building-columns"></i></div><div><div class="info-label">Institute / Organization</div><div class="info-value" id="profileInstituteText">{{ profile.institute|default:"Not set" }}</div></div></div>
+              <div class="info-item"><div class="info-icon"><i class="fa-solid fa-location-dot"></i></div><div><div class="info-label">Address</div><div class="info-value" id="profileAddressText">{{ profile.address|default:"Not set" }}</div></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-hdr">
+            <span class="card-title">Update Profile Info</span>
+            <span class="muted">Saved to your mentor profile</span>
+          </div>
+          <form id="profileInfoForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="profileMobileInput">Mobile number</label>
+                <input class="form-input" id="profileMobileInput" type="tel" placeholder="{{ profile.mobile|default:'+91 98765 43210' }}">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="profileInstituteInput">Institute / Organization</label>
+                <input class="form-input" id="profileInstituteInput" type="text" placeholder="{{ profile.institute|default:'College, university, or company' }}">
+              </div>
+              <div class="form-group full">
+                <label class="form-label" for="profileExpertiseInput">Add Expertise</label>
+                <input class="form-input" id="profileExpertiseInput" type="text" placeholder="{{ profile.expertise|default:'Django, React, Python' }}">
+              </div>
+              <div class="form-group full">
+                <label class="form-label" for="profileAddressInput">Address</label>
+                <input class="form-input" id="profileAddressInput" type="text" placeholder="{{ profile.address|default:'City, State' }}">
+              </div>
+            </div>
+            <button class="btn-teal" type="submit"><i class="fa-solid fa-floppy-disk"></i>Save profile info</button>
+          </form>
+        </div>
+      </section>

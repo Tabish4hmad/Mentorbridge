@@ -1,0 +1,32 @@
+      <section id="sec-availability" class="page-section hidden">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Weekly Availability</span></div>
+            <div class="avail-grid" id="availGrid"></div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label" for="avFrom">From</label>
+                <input class="form-input" type="time" id="avFrom" value="17:00">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="avTo">To</label>
+                <input class="form-input" type="time" id="avTo" value="19:00">
+              </div>
+            </div>
+            <button class="btn-teal" type="button" onclick="saveAvailability()"><i class="fa-solid fa-check"></i>Save Availability</button>
+          </div>
+
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Current Status</span></div>
+            <div style="display:grid;gap:1rem;">
+              <label style="display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem;background:var(--mist);border-radius:var(--radius-md);cursor:pointer;">
+                <span><span style="display:block;font-weight:700;">Accepting new students</span><span class="muted">Available for requests</span></span>
+                <input type="checkbox" checked style="accent-color:var(--teal);width:18px;height:18px;">
+              </label>
+              <div style="padding:1rem;background:#edf7f0;border-radius:var(--radius-md);border:1px solid rgba(26,107,58,.15);color:#1a6b3a;font-weight:700;font-size:.84rem;">
+                <i class="fa-solid fa-circle-check"></i> Profile is visible to students
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>

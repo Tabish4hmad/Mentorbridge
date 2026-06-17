@@ -1,0 +1,24 @@
+      <section id="sec-settings" class="page-section hidden">
+        <div class="two-col">
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Account Settings</span></div>
+            <div class="form-group">
+              <label class="form-label">Username</label>
+              <input class="form-input" value="{{ request.user.username }}" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input class="form-input" value="{{ request.user.email }}" readonly>
+            </div>
+            <button class="btn-outline" type="button" onclick="toast('Settings editing is coming soon.')"><i class="fa-solid fa-lock"></i>Saved by account profile</button>
+          </div>
+          <div class="card">
+            <div class="card-hdr"><span class="card-title">Notification Preferences</span></div>
+            <div style="display:grid;gap:1rem;">
+              <label style="display:flex;align-items:center;justify-content:space-between;gap:1rem;"><span>Request updates</span><input type="checkbox" checked style="accent-color:var(--teal);width:16px;height:16px;"></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;gap:1rem;"><span>New shared notes</span><input type="checkbox" checked style="accent-color:var(--teal);width:16px;height:16px;"></label>
+              <label style="display:flex;align-items:center;justify-content:space-between;gap:1rem;"><span>Session reminders</span><input type="checkbox" checked style="accent-color:var(--teal);width:16px;height:16px;"></label>
+            </div>
+          </div>
+        </div>
+      </section>
